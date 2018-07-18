@@ -31,7 +31,7 @@ import qualified Data.Aeson.Types          as A
 
 import           Data.Time                 (UTCTime)
 
-import           Level04.DB.Types          (DBComment)
+import           Level04.DB.Types          (DBComment (..))
 
 -- Notice how we've moved these types into their own modules. It's cheap and
 -- easy to add modules to carve out components in a Haskell application. So
@@ -100,8 +100,13 @@ instance ToJSON Comment where
 fromDbComment
   :: DBComment
   -> Either Error Comment
-fromDbComment db = -- error
-  Right $ Comment _a _b _c _d
+fromDbComment (DBComment c t b i) = -- error ""
+  Right $ Comment (CommentId c) _t _b _i
+
+-- mkCommentId
+--   :: int
+--   -> CommentId
+-- mkCommentId i = i
 
 data RqType
   = AddRq Topic CommentText
