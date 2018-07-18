@@ -47,5 +47,10 @@ unitTests = do
       -- 3) The '<topic>/view' route will respond with an error when given an empty topic
       -- 4) A gibberish route will return a 404
 
+      describe "View Route" $ do
+
+        it "Should return a 'not implemented' message and 200 status" $
+
+          get "puppies/view" `shouldRespondWith` "View Request not implemented"
 -- After you're done here, you'll need to uncomment the use of these functions
 -- in the `test/Test.hs` otherwise the tests won't run!

@@ -20,6 +20,7 @@ import           GHC.Generics              (Generic)
 
 import           Data.ByteString           (ByteString)
 import           Data.Text                 (Text)
+import           Data.Char                 (toLower)
 
 import           Data.List                 (stripPrefix)
 import           Data.Maybe                (fromMaybe)
@@ -71,8 +72,10 @@ data Comment = Comment
 modFieldLabel
   :: String
   -> String
-modFieldLabel =
-  error "modFieldLabel not implemented"
+modFieldLabel str =
+  -- map toLower strip
+  --   where strip = fromMaybe str (stripPrefix "comment" str)
+  toLower <$> fromMaybe str (stripPrefix "comment" str)
 
 instance ToJSON Comment where
   -- This is one place where we can take advantage of our `Generic` instance.
@@ -97,8 +100,8 @@ instance ToJSON Comment where
 fromDbComment
   :: DBComment
   -> Either Error Comment
-fromDbComment =
-  error "fromDbComment not yet implemented"
+fromDbComment db = -- error
+  Right $ Comment _a _b _c _d
 
 data RqType
   = AddRq Topic CommentText
