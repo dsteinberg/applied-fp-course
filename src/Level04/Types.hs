@@ -100,13 +100,11 @@ instance ToJSON Comment where
 fromDbComment
   :: DBComment
   -> Either Error Comment
-fromDbComment (DBComment c t b i) = -- error ""
-  Right $ Comment (CommentId c) _t _b _i
-
--- mkCommentId
---   :: int
---   -> CommentId
--- mkCommentId i = i
+fromDbComment (DBComment i t c u) =
+  Comment (CommentId i)
+    <$> (mkTopic t)
+    <*> (mkCommentText c)
+    <*> (Right u)
 
 data RqType
   = AddRq Topic CommentText

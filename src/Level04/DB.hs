@@ -15,7 +15,8 @@ import qualified Data.Text                          as Text
 
 import           Data.Time                          (getCurrentTime)
 
-import           Database.SQLite.Simple             (Connection, Query (Query))
+import           Database.SQLite.Simple             (Connection, Query (Query),
+                                                     open, close, execute_)
 import qualified Database.SQLite.Simple             as Sql
 
 import qualified Database.SQLite.SimpleErrors       as Sql
@@ -43,8 +44,8 @@ data FirstAppDB = FirstAppDB
 closeDB
   :: FirstAppDB
   -> IO ()
-closeDB =
-  error "closeDb not implemented"
+closeDB (FirstAppDB conn) =
+  close conn
 
 -- Given a `FilePath` to our SQLite DB file, initialise the database and ensure
 -- our Table is there by running a query to create it, if it doesn't exist
@@ -52,13 +53,15 @@ closeDB =
 initDB
   :: FilePath
   -> IO ( Either SQLiteResponse FirstAppDB )
-initDB fp =
-  error "initDb not implemented"
-  where
+initDB fp = Sql.runDBAction $ do
+    con <- open fp
+    res <- execute_ con createTableQ
+    pure $ FirstAppDB con
+    where
   -- Query has an `IsString` instance so string literals like this can be
   -- converted into a `Query` type when the `OverloadedStrings` language
   -- extension is enabled.
-    createTableQ = "CREATE TABLE IF NOT EXISTS comments (id INTEGER PRIMARY KEY, topic TEXT, comment TEXT, time TEXT)"
+      createTableQ = "CREATE TABLE IF NOT EXISTS comments (id INTEGER PRIMARY KEY, topic TEXT, comment TEXT, time TEXT)"
 
 -- Note that we don't store the `Comment` in the DB, it is the type we build
 -- to send to the outside world. We will be loading our `DbComment` type from
